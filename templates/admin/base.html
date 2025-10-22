@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Floor of Hearts Admin{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Horizontal Admin Navbar -->
+    
+    <nav class="admin-navbar">
+        <a href="{{ url_for('admin_dashboard') }}" class="brand">Floor of Hearts Admin</a>
+        {% if 'admin_id' in session %}
+        <ul class="admin-nav">
+            <li><a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+                <i class="fas fa-tachometer-alt"></i> Dashboard
+            </a></li>
+            <li><a href="{{ url_for('admin_products') }}" class="{% if request.endpoint == 'admin_products' %}active{% endif %}">
+                <i class="fas fa-box"></i> Products
+            </a></li>
+            <li><a href="{{ url_for('admin_categories') }}" class="{% if request.endpoint == 'admin_categories' %}active{% endif %}">
+                <i class="fas fa-tags"></i> Categories
+            </a></li>
+            <li><a href="{{ url_for('admin_product_types') }} " class="{% if request.endpoint == 'admin_product_types' %}active{% endif %}" >
+                <i class="fa-solid fa-list-ul"></i>Product Types
+            </a></li>
+            <li><a href="{{ url_for('admin_messages') }}" class="{% if request.endpoint == 'admin_messages' %}active{% endif %}" >
+                <i class="fa-solid fa-message"></i>Contact Messages
+            </a></li>
+                {% endif %}
+        </ul>
+        <div class="admin-user-menu">
+            {% if 'admin_id' in session %}
+            <span class="user-name">{{ session['admin_name'] }}</span>
+            {% endif %}
+            {% if 'admin_id' in session %}
+            <a href="{{ url_for('admin_logout') }}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="admin-container">
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

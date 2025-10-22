@@ -1,0 +1,5 @@
+flask==2.0.1
+flask-wtf==1.0.0
+wtforms==3.0.0
+python-dotenv==0.19.1
+pillow==8.3.2

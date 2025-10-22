@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Search Results for "{{ query }}" - Floor Of Hearts{% endblock %}
+
+{% block content %}
+<div>
+    <h1>Results for: <span id="search-query">{{ query }}</span></h1>
+</div>
+
+<div id="results" class="results">
+    {% if results %}
+        {% for product in results %}
+            <div class="result-card">
+                <img src="{{ product.image_url }}" alt="{{ product.name }}" class="result-image">
+                <h3>{{ product.name }}</h3>
+                <p class="result-id">{{ product.product_id }}</p>
+                <p class="result-desc">{{ product.description|truncate(150) }}</p>
+                <a href="{{ url_for('product', product_id=product.product_id) }}" class="result-link">View More</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No results found for "{{ query }}".</p>
+        <p>Try a different search term or browse our <a href="{{ url_for('home') }}">product categories</a>.</p>
+    {% endif %}
+</div>
+{% endblock %}

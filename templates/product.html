@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.name }} - Floor Of Hearts{% endblock %}
+
+{% block content %}
+<!-- Main Content Section -->
+<main class="product-page">
+    <!-- Product Title and Description -->
+    <section class="product-details">
+        <h1 class="product-title">{{ product.name }}</h1>
+        <p class="product-description">
+            {{ product.description }}
+        </p>
+    </section>
+
+    <!-- Product Images -->
+    <section class="product-images">
+        <div class="main-image">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+        </div>
+        {% if product.get_image_urls() %}
+        <div class="thumbnail-images">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}" class="thumbnail active" onclick="changeMainImage(this.src)">
+            {% for image_url in product.get_image_urls() %}
+            <img src="{{ image_url }}" alt="{{ product.name }}" class="thumbnail" onclick="changeMainImage(this.src)">
+            {% endfor %}
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- Product Specifications -->
+    <section class="product-specs">
+        <h2>Specifications</h2>
+        <table class="specs-table">
+            {% for key, value in product.get_specifications().items() %}
+            <tr>
+                <td class="spec-name">{{ key }}</td>
+                <td class="spec-value">{{ value }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </section>
+
+    <!-- Product Features -->
+    <section class="product-features">
+        <h2>Features</h2>
+        <ul>
+            {% for feature in product.get_features() %}
+            <li>{{ feature }}</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <!-- Call to Action -->
+    <div class="cta-section">
+        <a href="{{ url_for('contact') }}" class="cta-button">Request a Quote</a>
+    </div>
+</main>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function changeMainImage(src) {
+        // Update main image
+        document.querySelector('.main-image img').src = src;
+        
+        // Update active thumbnail
+        const thumbnails = document.querySelectorAll('.thumbnail');
+        thumbnails.forEach(thumb => {
+            if (thumb.src === src) {
+                thumb.classList.add('active');
+            } else {
+                thumb.classList.remove('active');
+            }
+        });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category.name }} - Floor Of Hearts{% endblock %}
+
+{% block content %}
+<div class="product-page">
+    <!-- Sidebar for Filtering -->
+    <aside class="sidebar">
+        <h3>Filter Options</h3>
+        <form id="filter-form">
+            {% for type in product_types %}
+            <label>
+                <input type="checkbox" name="filter" value="{{ type.slug }}" {% if request.args.get('type') == type.slug %}checked{% endif %}> {{ type.name }}
+            </label>
+            {% endfor %}
+        </form>
+    </aside>
+
+    <!-- Main Product Grid -->
+    <main class="product-grid">
+        {% for product in products %}
+        <div class="product" data-category="{{ product.product_type.slug if product.product_type else '' }}">
+            <img height="350" src="{{ product.image_url }}" alt="{{ product.name }}">
+            <h4>{{ product.name }}</h4>
+            <p id="prod-id">{{ product.product_type.name if product.product_type else 'Product' }} - {{ product.product_id }}</p>
+            <button class="view-product-btn" onclick="window.location.href=`{{ url_for('product', product_id=product.product_id) }}`">View Product</button>
+        </div>
+        {% else %}
+        <p class="no-products">No products found in this category.</p>
+        {% endfor %}
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const filterForm = document.getElementById("filter-form");
+        const products = document.querySelectorAll(".product");
+
+        // Function to update URL parameters without reloading the page
+        function updateUrlParam(key, value) {
+            const url = new URL(window.location.href);
+            if (value) {
+                url.searchParams.set(key, value);
+            } else {
+                url.searchParams.delete(key);
+            }
+            window.history.pushState({}, '', url);
+        }
+
+        filterForm.addEventListener("change", () => {
+            const selectedFilters = Array.from(
+                filterForm.querySelectorAll("input[type='checkbox']:checked")
+            ).map((checkbox) => checkbox.value);
+
+            // Update URL with filter parameter
+            updateUrlParam('type', selectedFilters.length === 1 ? selectedFilters[0] : '');
+
+            products.forEach((product) => {
+                const productCategory = product.getAttribute("data-category");
+                if (selectedFilters.length === 0 || selectedFilters.includes(productCategory)) {
+                    product.style.display = "block"; // Show product
+                } else {
+                    product.style.display = "none"; // Hide product
+                }
+            });
+        });
+
+        // Apply initial filter from URL if exists
+        const urlType = new URLSearchParams(window.location.search).get("type");
+        if (urlType) {
+            const checkbox = filterForm.querySelector(`input[value="${urlType}"]`);
+            if (checkbox) {
+                checkbox.checked = true;
+                // Trigger change event
+                const event = new Event('change');
+                filterForm.dispatchEvent(event);
+            }
+        }
+    });
+</script>
+{% endblock %}

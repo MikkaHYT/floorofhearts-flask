@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Floor Of Hearts - Quality Flooring Solutions{% endblock %}
+
+{% block content %}
+    <!-- Image Carousel -->
+    <div class="carousel">
+        <span class="arrow arrow-left" onclick="prevSlide()">&#10094;</span>
+        <img src="{{ url_for('static', filename='images/carousel/slide1.jpg') }}" class="active" alt="Slide 1">
+        <img src="{{ url_for('static', filename='images/carousel/slide2.jpg') }}" alt="Slide 2">
+        <img src="{{ url_for('static', filename='images/carousel/slide3.jpg') }}" alt="Slide 3">
+        <span class="arrow arrow-right" onclick="nextSlide()">&#10095;</span>
+    </div>
+
+    <div class="brands-ticker">
+        <h2>Our Suppliers</h2>
+        <ul class="brands-list">
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0212.webp/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:373,h:100,cg:true/fx-gs" alt="Company 1"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0235.jpeg/:/rs=w:327,h:100,cg:true,m/cr=w:327,h:100/fx-gs" alt="Company 2"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0239.webp/:/rs=w:266,h:100,cg:true,m/cr=w:266,h:100/fx-gs" alt="Company 3"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0224.jpeg/:/rs=w:300,h:100,cg:true,m/cr=w:300,h:100/fx-gs" alt="Company 4"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0222.png/:/rs=w:210,h:120,cg:true,m/cr=w:210,h:130/fx-gs" alt="Company 5"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0236.png/:/rs=w:316,h:120,cg:true,m/cr=w:316,h:120/fx-gs" alt="Company 6"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0226.png/:/rs=w:300,h:120,cg:true,m/cr=w:300,h:120/fx-gs" alt="Company 7"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0237.jpeg/:/rs=w:563,h:120,cg:true,m/cr=w:563,h:120/fx-gs" alt="Company 8"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0231.jpeg/:/rs=w:500,h:120,cg:true,m/cr=w:500,h:150/fx-gs" alt="Company 9"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0223.webp/:/rs=w:333,h:120,cg:true,m/cr=w:333,h:130/fx-gs" alt="Company 10"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0225.png/:/rs=w:200,h:120,cg:true,m/cr=w:200,h:130/fx-gs" alt="Company 11"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0221.jpeg/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:381,h:130,cg:true/fx-gs" alt="Company 12"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0219.jpeg/:/cr=t:0%25,l:0%25,w:100%25,h:100%25/rs=w:373,h:130,cg:true/fx-gs" alt="Company 13"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0217.png/:/rs=w:435,h:130,cg:true,m/cr=w:435,h:130/fx-gs" alt="Company 14"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0211.png/:/rs=w:736,h:130,cg:true,m/cr=w:736,h:130/fx-gs" alt="Company 15"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0216.jpeg/:/rs=w:400,h:148,cg:true,m/cr=w:400,h:148/fx-gs" alt="Company 16"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0215.jpeg/:/rs=w:657,h:130,cg:true,m/cr=w:657,h:130/fx-gs" alt="Company 17"></li>
+            <li><img src="https://img1.wsimg.com/isteam/ip/a87cee9b-8f24-41dc-be88-3569d8e2443f/IMG_0214.png/:/rs=h:130,cg:true,m/fx-gs" alt="Company 18"></li>
+        </ul>
+
+    </div>
+    
+    <!-- Main Content Section -->
+    <div class="content">
+        <div class="card">
+            <h3>Flooring Types</h3>
+            <div class="about-us-card">
+                <p>Explore our range of flooring types including LVT, Engineered Wood, Carpets, Laminates, Sisal, Flatweaves, Stair Runners, and Taping.</p>
+                <img id="types-bg" src="{{ url_for('static', filename='images/flooring-types.jpg') }}" alt="Flooring Types">
+                <a href="{{ url_for('category', category_name='lvt') }}" class="about-us-button">Learn More</a>
+            </div>
+        </div>
+        <div class="card">
+            <h3>About Us</h3>
+            <div class="about-us-card">
+                <p>We are a family-run business specializing in high-quality flooring solutions. With years of experience, we pride ourselves on delivering exceptional service and craftsmanship to our customers.</p>
+                <img id="types-bg" src="{{ url_for('static', filename='images/about-us.jpg') }}" alt="About Us">
+                <a href="{{ url_for('about') }}" class="about-us-button">About Us</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Reviews Section -->
+    <div class="checkatrade-reviews">
+        <h2>Customer Reviews from Checkatrade</h2>
+
+        <div class="review-card">
+            <p class="review-text">"Luke paid a visit to undertake a quotation, very professional, quotation reasonable and we have accepted for Floor of Hearts to undertake the work in early June."</p>
+            <p class="review-rating">⭐⭐⭐⭐⭐</p>
+            <p class="review-author">25/04/24</p>
+        </div>
+
+        <div class="review-card">
+            <p class="review-text">"Luke & Louise are a great team. Together they couldn't work any harder to give customer satisfaction. Friendly, efficient, reliable, & caring. We will definitely look forward to their expert help & advice when we are ready to have the rest of our home fully fitted with wood flooring."</p>
+            <p class="review-rating">⭐⭐⭐⭐⭐</p>
+            <p class="review-author">30/12/24</p>
+        </div>
+
+        <div class="review-card">
+            <p class="review-text">"Very happy with my new floor, beautifully laid. The team were clean & tidy, cleared up at the end of the day. Would definitely recommend."</p>
+            <p class="review-rating">⭐⭐⭐⭐⭐</p>
+            <p class="review-author">15/01/24</p>
+        </div>
+
+        <a class="cta-button" href="https://www.checkatrade.com/trades/floorofheartsltd" target="_blank">See More Reviews</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,374 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if product %}Edit{% else %}Add{% endif %} Product | Floor Of Hearts{% endblock %}
+
+{% block extra_css %}
+<style>
+    .spec-row, .feature-item {
+        margin-bottom: 10px;
+    }
+    .spec-container, .features-container {
+        border: 1px solid #e3e6f0;
+        border-radius: 0.5rem;
+        padding: 15px;
+        margin-bottom: 20px;
+        background-color: #f8f9fc;
+    }
+    .btn-add-spec, .btn-add-feature {
+        margin-top: 10px;
+    }
+    .feature-item {
+        display: flex;
+        align-items: center;
+    }
+    .feature-item span {
+        flex-grow: 1;
+        padding: 8px 12px;
+        background-color: white;
+        border: 1px solid #d1d3e2;
+        border-radius: 0.35rem;
+        margin-right: 10px;
+    }
+    .btn-remove {
+        background-color: #f8f9fc;
+        border: 1px solid #d1d3e2;
+        color: #e74a3b;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .btn-remove:hover {
+        background-color: #e74a3b;
+        color: white;
+    }
+    .hidden-json-data {
+        display: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid my-4">
+    <div class="row">
+        <!-- Main content -->
+        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2">{% if product %}Edit{% else %}Add New{% endif %} Product</h1>
+                <a href="{{ url_for('admin_products') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Back to Products
+                </a>
+            </div>
+            
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">{% if product %}Edit{% else %}Add{% endif %} Product</h6>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data" id="product-form">
+                        {{ form.csrf_token }}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="product_id" class="form-label">Product ID*</label>
+                                {{ form.product_id(class="form-control", placeholder="e.g. RT01") }}
+                                {% if form.product_id.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.product_id.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Product Name*</label>
+                                {{ form.name(class="form-control", placeholder="e.g. Rustic Oak") }}
+                                {% if form.name.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.name.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="category_id" class="form-label">Category*</label>
+                                {{ form.category_id(class="form-select") }}
+                                {% if form.category_id.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.category_id.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="product_type_id" class="form-label">Product Type</label>
+                                {{ form.product_type_id(class="form-select") }}
+                                {% if form.product_type_id.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.product_type_id.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="price" class="form-label">Price</label>
+                                {{ form.price(class="form-control", placeholder="e.g. 29.99") }}
+                                {% if form.price.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.price.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="image_url" class="form-label">Main Image URL</label>
+                                {{ form.image_url(class="form-control", placeholder="e.g. /static/images/RT01.jpg") }}
+                                {% if form.image_url.errors %}
+                                    <div class="invalid-feedback d-block">
+                                        {% for error in form.image_url.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description*</label>
+                            {{ form.description(class="form-control", rows=5) }}
+                            {% if form.description.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.description.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Specifications -->
+                        <div class="mb-3">
+                            <label class="form-label">Specifications</label>
+                            <div class="spec-container" id="specifications-container">
+                                <div class="spec-row row">
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control spec-key" placeholder="Name (e.g. Width)">
+                                    </div>
+                                    <div class="col-md-5">
+                                        <input type="text" class="form-control spec-value" placeholder="Value (e.g. 150mm)">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button type="button" class="btn btn-remove remove-spec"><i class="fas fa-times"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-primary btn-add-spec">
+                                <i class="fas fa-plus"></i> Add Specification
+                            </button>
+                            <!-- Hidden textarea for form submission -->
+                            {{ form.specifications(class="hidden-json-data", id="specifications-json") }}
+                            {% if form.specifications.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.specifications.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Features -->
+                        <div class="mb-3">
+                            <label class="form-label">Features</label>
+                            <div class="features-container">
+                                <div id="features-list">
+                                    <!-- Features will be added here -->
+                                </div>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="new-feature" placeholder="Enter a feature (e.g. Waterproof)">
+                                    <button class="btn btn-primary btn-add-feature" type="button">
+                                        <i class="fas fa-plus"></i> Add
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Hidden textarea for form submission -->
+                            {{ form.features(class="hidden-json-data", id="features-json") }}
+                            {% if form.features.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {% for error in form.features.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex justify-content-end">
+                            <a href="{{ url_for('admin_products') }}" class="btn btn-secondary me-2">Cancel</a>
+                            <button type="submit" class="btn btn-primary">{% if product %}Update{% else %}Add{% endif %} Product</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        // Initialize with existing data if present (for edit mode)
+        initializeSpecifications();
+        initializeFeatures();
+        
+        // Add specification
+        $('.btn-add-spec').on('click', function() {
+            addSpecificationRow();
+        });
+        
+        // Remove specification
+        $(document).on('click', '.remove-spec', function() {
+            $(this).closest('.spec-row').remove();
+            updateSpecificationsJson();
+        });
+        
+        // Add feature
+        $('.btn-add-feature').on('click', function() {
+            const featureText = $('#new-feature').val().trim();
+            if (featureText) {
+                addFeature(featureText);
+                $('#new-feature').val('').focus();
+            }
+        });
+        
+        // Enter key in feature input
+        $('#new-feature').on('keypress', function(e) {
+            if (e.which === 13) { // Enter key
+                e.preventDefault();
+                $('.btn-add-feature').click();
+            }
+        });
+        
+        // Remove feature
+        $(document).on('click', '.remove-feature', function() {
+            $(this).closest('.feature-item').remove();
+            updateFeaturesJson();
+        });
+        
+        // Form submission
+        $('#product-form').on('submit', function() {
+            updateSpecificationsJson();
+            updateFeaturesJson();
+            return true;
+        });
+        
+        // Functions to initialize from existing data
+        function initializeSpecifications() {
+            const specificationsJson = $('#specifications-json').val();
+            if (specificationsJson) {
+                try {
+                    const specifications = JSON.parse(specificationsJson);
+                    
+                    // Clear default empty row
+                    $('#specifications-container').empty();
+                    
+                    // Add a row for each specification
+                    for (const key in specifications) {
+                        if (specifications.hasOwnProperty(key)) {
+                            addSpecificationRow(key, specifications[key]);
+                        }
+                    }
+                } catch (e) {
+                    console.error('Error parsing specifications JSON:', e);
+                }
+            }
+            
+            // Add empty row if none exist
+            if ($('.spec-row').length === 0) {
+                addSpecificationRow();
+            }
+        }
+        
+        function initializeFeatures() {
+            const featuresJson = $('#features-json').val();
+            if (featuresJson) {
+                try {
+                    const features = JSON.parse(featuresJson);
+                    features.forEach(feature => {
+                        addFeature(feature);
+                    });
+                } catch (e) {
+                    console.error('Error parsing features JSON:', e);
+                }
+            }
+        }
+        
+        // Helper functions
+        function addSpecificationRow(key = '', value = '') {
+            const newRow = `
+                <div class="spec-row row mb-2">
+                    <div class="col-md-5">
+                        <input type="text" class="form-control spec-key" placeholder="Name (e.g. Width)" value="${key}">
+                    </div>
+                    <div class="col-md-5">
+                        <input type="text" class="form-control spec-value" placeholder="Value (e.g. 150mm)" value="${value}">
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-remove remove-spec"><i class="fas fa-times"></i></button>
+                    </div>
+                </div>
+            `;
+            $('#specifications-container').append(newRow);
+        }
+        
+        function addFeature(text) {
+            const newFeature = `
+                <div class="feature-item">
+                    <span>${text}</span>
+                    <button type="button" class="btn btn-remove remove-feature"><i class="fas fa-times"></i></button>
+                </div>
+            `;
+            $('#features-list').append(newFeature);
+            updateFeaturesJson();
+        }
+        
+        function updateSpecificationsJson() {
+            const specs = {};
+            $('.spec-row').each(function() {
+                const key = $(this).find('.spec-key').val().trim();
+                const value = $(this).find('.spec-value').val().trim();
+                if (key) {
+                    specs[key] = value;
+                }
+            });
+            $('#specifications-json').val(JSON.stringify(specs));
+        }
+        
+        function updateFeaturesJson() {
+            const features = [];
+            $('.feature-item span').each(function() {
+                features.push($(this).text());
+            });
+            $('#features-json').val(JSON.stringify(features));
+        }
+    });
+</script>
+{% endblock %}

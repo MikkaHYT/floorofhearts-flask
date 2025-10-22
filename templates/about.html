@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}About Us - Floor Of Hearts{% endblock %}
+
+{% block content %}
+<section class="about-us">
+    <h2 class="section-title">Visit Us</h2>
+    <p class="section-text">
+        Come and explore our showroom, hosting our large samples for you to look through to get a feel for 
+        <strong>colour-ways</strong> and <strong>textures</strong>.
+    </p>
+    <p class="section-text">
+        Bring your <strong>paint & materials swatches</strong>, and we can get to work with matching materials to your new decor choices.
+    </p>
+    <p class="section-text">
+        Find the <strong>perfect</strong> flooring to <strong>compliment</strong> your furnishings and room - all in one place!
+    </p>
+
+    <div class="about-image">
+        <img src="{{ url_for('static', filename='images/showroom.jpg') }}" alt="Our Showroom">
+    </div>
+
+    <h2 class="section-title">Our Story</h2>
+    <p class="section-text">
+        Floor of Hearts is a family-run business with over 20 years of experience in the flooring industry. We take pride in offering a personalized service from start to finish, ensuring that every customer finds the perfect flooring solution for their home or business.
+    </p>
+    <p class="section-text">
+        Our journey began when founder Luke Hearts recognized the need for a flooring company that combines quality products with exceptional customer service. Since then, we have grown to become a trusted name in Swindon and the surrounding areas.
+    </p>
+    <p class="section-text">
+        We believe that flooring is not just a practical necessity but an essential design element that can transform any space. That's why we offer a wide range of high-quality flooring options, from luxury vinyl tiles to engineered wood, carpets, laminates, and more.
+    </p>
+
+    <h2 class="section-title">Our Commitment</h2>
+    <ul class="commitment-list">
+        <li><strong>Quality Products:</strong> We source our products from reputable manufacturers to ensure durability and longevity.</li>
+        <li><strong>Expert Advice:</strong> Our team has extensive knowledge and experience in all types of flooring, allowing us to provide expert guidance to our customers.</li>
+        <li><strong>Professional Installation:</strong> We offer professional installation services to ensure your flooring is fitted to the highest standard.</li>
+        <li><strong>Customer Satisfaction:</strong> Your satisfaction is our priority, and we go above and beyond to meet your expectations.</li>
+    </ul>
+
+    <div class="map-container">
+        <h2 class="section-title">Find Us</h2>
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.9608068786673!2d-1.7857174234370614!3d51.51430820959687!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48714410ade64981%3A0xeeaa80afae02fc1c!2s8%20Wood%20St%2C%20Swindon%20SN1%204AB!5e0!3m2!1sen!2suk!4v1714949450062!5m2!1sen!2suk" 
+            width="100%" 
+            height="450" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+</section>
+{% endblock %}

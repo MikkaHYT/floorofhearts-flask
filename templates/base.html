@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Floor Of Hearts{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    {% if request.path.startswith('/admin') %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    {% endif %}
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    {% block extra_css %}{% endblock %}
+    <script>
+        // Add to scripts section
+        $(window).on('load', function() {
+            $('.page-loader').fadeOut(500, function() {
+                $(this).remove();
+            });
+        });
+    </script>
+</head>
+<body>
+    <!-- Header Section -->
+    <div class="header">
+        <div class="search-bar">
+            <form action="{{ url_for('search') }}" method="get">
+                <input type="text" name="search" id="search-input" placeholder="Search...">
+                <button type="submit" id="search-button">
+                    <img id="search-img" src="{{ url_for('static', filename='images/search-icon.png') }}" alt="Search Icon" width="21" height="21">
+                </button>
+            </form>
+        </div>
+
+        <div class="logo">
+            <a href="{{ url_for('home') }}"><img id="logo" src="{{ url_for('static', filename='logo.png') }}" alt="Floor Of Hearts Logo"></a>
+        </div>
+
+        <div class="contact-info">
+            <p>8 Wood Street, Swindon, SN1 4AB</p>
+            <p><a href="tel:+447957770194" style="color: black; text-decoration: none;">📞 07957 770194</a></p>
+            <div class="social-icons">
+                <a href="https://www.facebook.com/FloorOfHearts/"><img src="https://static.vecteezy.com/system/resources/thumbnails/018/930/476/small_2x/facebook-logo-facebook-icon-transparent-free-png.png" width="54" height="54" alt="Facebook"></a>
+                <a href="https://www.instagram.com/floorofhearts/"><img src="https://static.vecteezy.com/system/resources/previews/042/148/632/non_2x/instagram-logo-instagram-social-media-icon-free-png.png" width="54" height="57" style="position: relative; top: 2.5px;" alt="Instagram"></a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Navigation Menu -->
+    <div class="navigation">
+        {% for category in categories %}
+            {% if category.slug == 'lvt' %}
+                <a href="{{ url_for('category', category_name=category.slug) }}" class="dropdown-parent{% if active_category == category.slug %}-active{% endif %}">{{ category.name }}</a>
+                <div class="dropdown">
+                    {% for type in product_types if type.category_id == category.id %}
+                        <a href="{{ url_for('category', category_name=category.slug) }}?type={{ type.slug }}">{{ type.name }}</a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <a href="{{ url_for('category', category_name=category.slug) }}"{% if active_category == category.slug %} class="active"{% endif %}>{{ category.name }}</a>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <!-- Navigation Links -->
+            <div class="footer-nav">
+                <h3>Quick Links</h3>
+                <div class="quick-links">
+                    {% for category in categories %}
+                        <a href="{{ url_for('category', category_name=category.slug) }}">{{ category.name }}</a>
+                    {% endfor %}
+                    <a href="{{ url_for('about') }}">About Us</a>
+                    <a href="{{ url_for('contact') }}">Contact</a>
+                </div>
+            </div>
+    
+            <!-- Contact Information -->
+            <div class="footer-contact">
+                <h3>Contact Us</h3>
+                <p>8 Wood Street, Swindon, SN1 4AB</p>
+                <p><a style="color: rgb(218, 216, 216); text-decoration: none;" href="tel:+447957770194">📞 07957 770194</a></p>
+            </div>
+    
+            <!-- Social Media Links -->
+            <div class="footer-social">
+                <h3>Follow Us</h3>
+                <a href="https://www.facebook.com/FloorOfHearts/">
+                    <img src="https://static.vecteezy.com/system/resources/thumbnails/018/930/476/small_2x/facebook-logo-facebook-icon-transparent-free-png.png" width="30" height="30" alt="Facebook">
+                </a>
+                <a href="https://www.instagram.com/floorofhearts/">
+                    <img src="https://static.vecteezy.com/system/resources/previews/042/148/632/non_2x/instagram-logo-instagram-social-media-icon-free-png.png" width="30" height="30" alt="Instagram">
+                </a>
+            </div>
+        </div>
+    
+        <!-- Copyright -->
+        <div class="footer-copyright">
+            <p>&copy; {{ current_year }} Floor Of Hearts. All rights reserved. <a href="{{ url_for('admin_login') }}" class="admin-link">Admin</a></p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
