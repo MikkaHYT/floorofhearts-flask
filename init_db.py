@@ -2,6 +2,8 @@ import os
 import sys
 import json
 import sqlite3
+import hashlib
+import datetime
 
 # Add the parent directory to the path so we can import our modules
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -15,6 +17,18 @@ def seed_database():
     """Seed the database with initial data"""
     conn = get_db_connection()
     cursor = conn.cursor()
+
+    # Ensure the instance directory and DB file exist before proceeding
+    db_abspath = os.path.abspath('instance/floorofhearts.db')
+    db_dir = os.path.dirname(db_abspath)
+
+    if not os.path.isdir(db_dir):
+        os.makedirs(db_dir, exist_ok=True)
+
+    if not os.path.exists(db_abspath):
+        # create an empty file so sqlite can open it (sqlite would also create it on connect,
+        # but ensuring the directory exists and touching the file is safe)
+        open(db_abspath, 'a').close()
     
     # Check if categories table exists, if not create it
     cursor.execute('''
@@ -72,11 +86,43 @@ def seed_database():
         created_at TEXT
     )
     ''')
-    
-    # Check if we already have data
+
+    # Create contacts table (used by ContactMessage)
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS contacts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        email TEXT NOT NULL,
+        phone TEXT,
+        subject TEXT NOT NULL,
+        message TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    ''')
+
+    conn.commit()
+
+    # Check if we already have category data; if so, skip seeding categories/products
     cursor.execute('SELECT COUNT(*) FROM categories')
-    if cursor.fetchone()[0] > 0:
-        print("Database already seeded. Skipping.")
+    categories_count = cursor.fetchone()[0]
+    if categories_count > 0:
+        # Ensure admin user exists before returning
+        cursor.execute('SELECT COUNT(*) FROM admin_users WHERE username = ?', ('testadmin',))
+        if cursor.fetchone()[0] == 0:
+            cursor.execute('''
+            INSERT INTO admin_users (username, password_hash, name, email, is_active, created_at)
+            VALUES (?, ?, ?, ?, ?, ?)
+            ''', (
+                'testadmin',
+                hashlib.sha256('testpass'.encode()).hexdigest(),
+                'Test Admin',
+                'testadmin@example.com',
+                1,
+                datetime.datetime.now().isoformat()
+            ))
+            conn.commit()
+
+        print("Database already seeded. Skipping categories/products seeding.")
         conn.close()
         return
     
@@ -296,7 +342,7 @@ def seed_database():
         }
     ]
     
-    import datetime
+
     now = datetime.datetime.now().isoformat()
     
     for product_data in products:
@@ -322,6 +368,23 @@ def seed_database():
         ))
     
     conn.commit()
+
+    # Ensure test admin user exists (idempotent)
+    cursor.execute('SELECT COUNT(*) FROM admin_users WHERE username = ?', ('testadmin',))
+    if cursor.fetchone()[0] == 0:
+        cursor.execute('''
+        INSERT INTO admin_users (username, password_hash, name, email, is_active, created_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+        ''', (
+            'testadmin',
+            hashlib.sha256('testpass'.encode()).hexdigest(),
+            'Test Admin',
+            'testadmin@example.com',
+            1,
+            datetime.datetime.now().isoformat()
+        ))
+        conn.commit()
+
     conn.close()
     print("Database seeded successfully!")
 
